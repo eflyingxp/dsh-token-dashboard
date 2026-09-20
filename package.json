@@ -1,0 +1,24 @@
+{
+  "name": "dsh-token-dashboard",
+  "version": "1.0.0",
+  "description": "Token-usage dashboard plugin for the DeepSeek Harness (DSH): zero-dependency Node server + SVG charts, embedded into the DSH web GUI.",
+  "license": "MIT",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": { "default": "./lib/index.js" },
+    "./client": { "default": "./lib/client.js" },
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "engines": { "dsh": ">=0.1.5-rc.1" },
+    "bundle": { "patch": "./cordis.patch.yml" },
+    "client": { "inject": [], "platform": "web" }
+  },
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

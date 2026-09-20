@@ -1,0 +1,4 @@
+# dsh-token-dashboard bundle patch: insert the plugin row into the web plugin roster.
+- insert:
+    - id: token-dashboard
+      name: dsh-token-dashboard
