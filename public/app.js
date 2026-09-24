@@ -467,7 +467,8 @@
         }).join('') + '</div>'
       }
       if (!body) body = '<div class="td-muted">' + esc(p.credential === 'none' ? '未配置凭证' : '无余额/套餐数据') + '</div>'
-      var cred = p.credential === 'oauth' ? 'OAuth' : p.credential === 'env' ? '环境变量' : p.credential === 'key' ? 'API Key' : '未配置'
+      var cred = p.credential === 'oauth' ? 'OAuth' : p.credential === 'env' ? '环境变量' : p.credential === 'key' ? 'API Key' : p.credential === 'auto' ? '自动发现凭证' : '未配置'
+      if (p.error) body += '<div class="td-muted">' + esc(String(p.error).slice(0, 120)) + '</div>'
       return '<section class="td-card td-provider-card">' +
         '<div class="td-card-head"><div><h2>' + esc(name) + '</h2><p>' + esc(id) + ' · ' + esc(cred) + '</p></div></div>' +
         body + '</section>'

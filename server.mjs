@@ -17,6 +17,7 @@ import {
   qwenPlanSnapshot
 } from './lib/data.mjs'
 import { codexPlanSnapshot } from './lib/codex-quota.mjs'
+import { reviveNoneCredentialProviders } from './lib/providers.mjs'
 
 const CODEX_PROVIDER_ID = 'codex-chatgpt'
 
@@ -96,6 +97,10 @@ async function handleApi(req, res, url) {
     const agg = aggregateRange(days, overrides)
     const snapshots = readSnapshots() || { providers: {} }
     if (!snapshots.providers || typeof snapshots.providers !== 'object') snapshots.providers = {}
+    // DSH 0.1.7-rc.1: the host dsh-usage plugin loses the llm-pi-ai profile
+    // mapping after the settings.yaml -> cordis.patch.yml migration and marks
+    // most providers credential:"none". Re-resolve and re-probe them here.
+    await reviveNoneCredentialProviders(snapshots.providers)
     // The host dsh-usage plugin has no adapter for the Aliyun token plan, so
     // splice in a live qwen-token-plan-cn card probed by this server.
     snapshots.providers[QWEN_PROVIDER_ID] = await qwenPlanSnapshot()

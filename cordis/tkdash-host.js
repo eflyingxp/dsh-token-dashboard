@@ -535,7 +535,7 @@ return {
         const parts = ((hr.stdout && hr.stdout.text) || '').trim().split(/\s+/)
         const home = parts[0] || ''
         const custom = parts[1] || ''
-        const candidates = [custom, home + '/.dsh/profiles/web/node_modules/dsh-token-dashboard', home + '/dsh-token-dashboard', home + '/DSH/dsh-token-dashboard'].filter(Boolean)
+        const candidates = [custom, home + '/.dsh/profiles/web/node_modules/dsh-token-dashboard', home + '/dsh-token-dashboard', home + '/DSH/dsh-token-dashboard', home + '/DSH/TokenDashboard'].filter(Boolean)
         for (const dir of candidates) {
           const exists = await sh('test -f ' + JSON.stringify(dir + '/server.mjs'), 5000)
           if (exists.exitCode === 0) {
