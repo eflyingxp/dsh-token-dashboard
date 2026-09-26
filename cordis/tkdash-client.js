@@ -1,5 +1,5 @@
 const CSS_LINES = [
-  '.tkd-embed { width: 100%; height: calc(100vh - 118px); min-height: 640px; border: 0; display: block; background: transparent; }',
+  '.tkd-embed { width: 100%; border: 0; display: block; background: transparent; }',
   '.tkd-page { padding: 24px 32px; max-width: 1100px; }',
   '.tkd-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }',
   '.tkd-head-right { display: flex; gap: 12px; align-items: center; }',
@@ -266,7 +266,39 @@ function LedgerTab() {
 }
 
 function DashboardPage() {
-  return React.createElement('iframe', { className: 'tkd-embed', title: 'TokenDashboard 看板', src: 'http://127.0.0.1:8788/' })
+  const iframeRef = React.useRef(null)
+  const [embedHeight, setEmbedHeight] = React.useState(null)
+  React.useEffect(() => {
+    const el = iframeRef.current
+    if (!el) return undefined
+    const update = function () {
+      // 实测 iframe 顶部到窗口底部的距离，让 iframe 精确填满剩余空间，
+      // 避免写死高度在宿主布局变化时底部露出白条。
+      const rect = el.getBoundingClientRect()
+      const h = Math.max(400, Math.floor(window.innerHeight - rect.top))
+      setEmbedHeight(h)
+    }
+    update()
+    let ro = null
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(update)
+      ro.observe(document.body)
+      if (el.parentElement) ro.observe(el.parentElement)
+    }
+    window.addEventListener('resize', update)
+    return function () {
+      if (ro) ro.disconnect()
+      window.removeEventListener('resize', update)
+    }
+  }, [])
+  const style = embedHeight != null ? { height: embedHeight + 'px' } : { height: '80vh' }
+  return React.createElement('iframe', {
+    ref: iframeRef,
+    className: 'tkd-embed',
+    style: style,
+    title: 'TokenDashboard 看板',
+    src: 'http://127.0.0.1:8788/',
+  })
 }
 
 function SidebarEntry(props) {
